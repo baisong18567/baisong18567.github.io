@@ -1,0 +1,143 @@
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <title>
+      Intro to MapView - Create a 2D map | Sample | ArcGIS Maps SDK for
+      JavaScript 4.26
+    </title>
+    <style>
+      html,
+      body,
+      #viewDiv {
+        padding: 0;
+        margin: 0;
+        height: 100%;
+        width: 100%;
+      }
+      #header {
+        height: 35px;
+        background-color: 	white;
+        text-align: center;
+        line-height: 40px;
+        font-size: 20px;
+      }
+    </style>
+
+    <link
+      rel="stylesheet"
+      href="https://js.arcgis.com/4.26/esri/themes/light/main.css"
+    />
+    <script src="https://js.arcgis.com/4.26/"></script>
+
+    <script>
+      require(["esri/Map", // 添加类的引用
+      "esri/views/MapView",
+      "esri/layers/FeatureLayer",
+      "esri/widgets/Legend",
+      "esri/widgets/ScaleBar",
+      "esri/widgets/Search",
+      "esri/widgets/LayerList",
+      "esri/WebMap",
+      "esri/widgets/BasemapGallery"
+      ], (Map, MapView, FeatureLayer, Legend, ScaleBar, Search, LayerList, WebMap,BasemapGallery) => { // 类的别名
+        // ------------------------------------------------------------------
+        // 添加要素1
+        const flayer1 = new FeatureLayer({//图层要素的url
+        // URL to the service 
+        url: "https://www.geosceneonline.cn/server/rest/services/Hosted/福州市商业购物中心/FeatureServer"
+        });
+        
+        
+        
+        
+        
+        const map = new Map({
+          basemap: "topo-vector",
+          layers:[flayer1] // layers数组，可以存放多个图层
+        });
+        //map.layers.add(flayer1);
+        //map.layers.add(tiledlayer);
+        //map.addMany(flayer1, tiledlayer)
+        
+        // ------------------------------------------------------------------
+        // 设置视图
+        const view1 = new MapView({
+          container: "viewDiv", // 视图容器存放在当前网页的目录下
+          map: map,
+          zoom: 13,
+          center: [119.28, 26.08] // longitude, latitude
+        });
+        
+        // ------------------------------------------------------------------
+        // 设置图例
+        const legend = new Legend({
+            view: view1,
+            layerInfos: [
+              {
+                layer: flayer1,
+                title: "事件类型"
+              }
+            ]
+          });
+
+        // Add widget to the bottom right corner of the view
+        view1.ui.add(legend, "bottom-right");
+        
+        // ------------------------------------------------------------------
+        // 设置比例尺
+        let scaleBar = new ScaleBar({
+          view: view1,
+          style: "ruler",
+          unit : "metric"
+        });
+        // Add widget to the bottom left corner of the view
+        view1.ui.add(scaleBar, {
+          position: "bottom-left"
+        });
+        
+        // ------------------------------------------------------------------
+        // 设置搜索功能
+        const searchWidget = new Search({
+        view: view1
+        });
+        // Adds the search widget below other elements in
+        // the top right corner of the view
+        view1.ui.add(searchWidget, {
+        position: "top-right",
+        index: 2
+        });
+        
+        // ------------------------------------------------------------------
+        // 设置图层列表功能
+        let layerList = new LayerList({
+        view: view1
+        });
+        // Adds widget below other elements in the top left corner of the view
+        view1.ui.add(layerList, {
+        position: "top-left"
+        });
+        
+        let basemapGallery = new BasemapGallery({
+  view: view1,
+  container:basemapDiv
+});
+// Add widget to the top right corner of the view
+view1.ui.add(basemapGallery, {
+  position: "top-right"
+});
+        // END
+      });
+    </script>
+  </head>
+
+  <body>
+    <div id="header">福州市商业购物中心</div>
+    <div id="viewDiv"></div>
+    <div id="basemapDiv"></div>
+    
+  </body>
+</html>
